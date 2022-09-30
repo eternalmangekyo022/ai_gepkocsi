@@ -1,14 +1,11 @@
-import React from 'react';
+import React, { MouseEventHandler } from 'react';
 
 export default React.memo(
-    function Circle({ color }: { color: 'white' | 'black' | 'red' | 'blue' | 'gray' }) {
+    function Circle({ color, setCarSource }: { color: 'white' | 'black' | 'red' | 'blue' | 'gray', setCarSource: MouseEventHandler<HTMLButtonElement> }) {
         return <>
             <button
                 className='relative rounded-full w-10 aspect-square'
-                onClick={() => {
-
-                    return null;
-                }}
+                onClick={setCarSource}
                 style={{ backgroundColor: color }}
             />
         </>;

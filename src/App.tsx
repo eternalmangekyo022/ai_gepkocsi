@@ -6,7 +6,43 @@ import Circle from './components/Circle';
 function App(): JSX.Element {
     const [drawer, setDrawer] = useState<boolean>(false);
     const [drawerRef, { height: drawerHeight }] = useMeasure();
-    const [carSource, setCarSource] = useState<string>('https://static-assets.tesla.com/configurator/compositor?&options=$MTY13,$PPSW,$WY19B,$INPB0&view=REAR34&model=my&size=1920&bkba_opt=2&crop=0,0,0,0&version=v0119-fec036b0d202209290551');
+    const [carSource, setCarSource] = useState<string>();
+    const [cars, setCars] = useState<{[key: string]: string}>({white: '', black: '', blue: '', red: '', gray: ''});
+
+    useEffect(() => {
+        
+
+        const urls = [
+            'https://static-assets.tesla.com/configurator/compositor?&options=$MTY13,$PPSW,$WY19B,$INPB0&view=REAR34&model=my&size=1920&bkba_opt=2&crop=0,0,0,0&version=v0119-fec036b0d202209290551',
+            'https://static-assets.tesla.com/configurator/compositor?&options=$MTY13,$PPSB,$WY19B,$INPB0&view=REAR34&model=my&size=1920&bkba_opt=2&crop=0,0,0,0&version=v0119-fec036b0d202209290551',
+            'https://static-assets.tesla.com/configurator/compositor?&options=$MTY13,$PPMR,$WY19B,$INPB0&view=REAR34&model=my&size=1920&bkba_opt=2&crop=0,0,0,0&version=v0119-fec036b0d202209290551', 
+            'https://static-assets.tesla.com/configurator/compositor?&options=$MTY13,$PMNG,$WY19B,$INPB0&view=REAR34&model=my&size=1920&bkba_opt=2&crop=0,0,0,0&version=v0119-fec036b0d202209290551',
+            'https://static-assets.tesla.com/configurator/compositor?&options=$MTY13,$PBSB,$WY19B,$INPB0&view=REAR34&model=my&size=1920&bkba_opt=2&crop=0,0,0,0&version=v0119-fec036b0d202209290551'
+        ];
+        async function fetchCars() {
+            /* [white, blue, red, gray, black] */
+            try {
+                let results: string[] | Blob[] | Response[] = await Promise.all(urls.map(i => fetch(i)));
+                results = await Promise.all(results.map(i => i.blob()));
+                return results.map(i => URL.createObjectURL(i));
+            } catch (e) {
+                return Promise.reject(e);
+            }
+        }
+
+        fetchCars()
+            .then(([white, blue, red, gray, black]) => {
+                setCarSource(white);
+                setCars({
+                    white,
+                    blue,
+                    red,
+                    gray,
+                    black
+                });
+            })
+            .catch(err => console.error(err));
+    }, []);
 
     return <>
         <div className='relative w-screen no-scrollbar'>
@@ -70,16 +106,18 @@ function App(): JSX.Element {
                         Az általam legkedveltebb, sokak szerint &apos;hamis&apos; biztonságot nyújtó, 2020-as gyártású <span className='font-bold'>Tesla Model Y</span>.
                     </p>
                     <motion.img
-                        className='max-h-[20rem] object-cover mt-10' src={carSource}
+                        draggable={false}
+                        className='max-h-[20rem] object-cover mt-10'
+                        src={carSource}
                         whileHover={{ scale: 1.2, opacity: .8 }}
                     />
                     <div className='mt-[3.7vh] bg-gray-200 rounded-full min-w-[40%] w-[15rem] max-w-[20rem] h-20 flex justify-center items-center'>
                         <div className='flex flex-row justify-between w-[80%]'>
-                            <Circle color='white'/>
-                            <Circle color='blue'/>
-                            <Circle color='red'/>
-                            <Circle color='gray'/>
-                            <Circle color='black'/>
+                            <Circle color='white' setCarSource={() => setCarSource(cars.white)}/>
+                            <Circle color='blue' setCarSource={() => setCarSource(cars.blue)}/>
+                            <Circle color='red' setCarSource={() => setCarSource(cars.red)}/>
+                            <Circle color='gray' setCarSource={() => setCarSource(cars.gray)}/>
+                            <Circle color='black' setCarSource={() => setCarSource(cars.black)}/>
                         </div>
 
                     </div>
