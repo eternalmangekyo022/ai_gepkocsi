@@ -76,11 +76,10 @@ function App(): JSX.Element {
                     <div className='mt-[3.7vh] bg-gray-200 rounded-full min-w-[40%] w-[15rem] max-w-[20rem] h-20 flex justify-center items-center'>
                         <div className='flex flex-row justify-between w-[80%]'>
                             <Circle color='white'/>
-                            <Circle color='blue-500'/>
-                            <Circle color='red-500'/>
-                            <Circle color='gray-500'/>
+                            <Circle color='blue'/>
+                            <Circle color='red'/>
+                            <Circle color='gray'/>
                             <Circle color='black'/>
-
                         </div>
 
                     </div>
