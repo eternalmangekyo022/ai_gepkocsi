@@ -8,10 +8,19 @@ function App(): JSX.Element {
     const [drawerRef, { height: drawerHeight }] = useMeasure();
     const [carSource, setCarSource] = useState<string>();
     const [cars, setCars] = useState<{[key: string]: string}>({white: '', black: '', blue: '', red: '', gray: ''});
+    const [arrowOn, setArrowOn] = useState<boolean>(true);
+    const [width, setWidth] = useState<number>(window.innerWidth);
 
     useEffect(() => {
-        
+        window.onresize = () => {
+            setWidth(window.innerWidth);
+        };
 
+        let interval: NodeJS.Timer;
+        if(width > 768) {
+            interval = setInterval(() => setArrowOn(p => !p), 1000);
+        }
+        
         const urls = [
             'https://static-assets.tesla.com/configurator/compositor?&options=$MTY13,$PPSW,$WY19B,$INPB0&view=REAR34&model=my&size=1920&bkba_opt=2&crop=0,0,0,0&version=v0119-fec036b0d202209290551',
             'https://static-assets.tesla.com/configurator/compositor?&options=$MTY13,$PPSB,$WY19B,$INPB0&view=REAR34&model=my&size=1920&bkba_opt=2&crop=0,0,0,0&version=v0119-fec036b0d202209290551',
@@ -19,6 +28,7 @@ function App(): JSX.Element {
             'https://static-assets.tesla.com/configurator/compositor?&options=$MTY13,$PMNG,$WY19B,$INPB0&view=REAR34&model=my&size=1920&bkba_opt=2&crop=0,0,0,0&version=v0119-fec036b0d202209290551',
             'https://static-assets.tesla.com/configurator/compositor?&options=$MTY13,$PBSB,$WY19B,$INPB0&view=REAR34&model=my&size=1920&bkba_opt=2&crop=0,0,0,0&version=v0119-fec036b0d202209290551'
         ];
+        
         async function fetchCars() {
             /* [white, blue, red, gray, black] */
             try {
@@ -42,6 +52,12 @@ function App(): JSX.Element {
                 });
             })
             .catch(err => console.error(err));
+
+
+        return () => {
+            if(interval) clearInterval(interval);
+            window.onresize = null;
+        };
     }, []);
 
     return <>
@@ -99,7 +115,7 @@ function App(): JSX.Element {
                 style={{ minHeight: window.innerHeight - drawerHeight }}
             >
                 {/* eslint-disable-next-line */}
-                <div className='min-w-[50vw] w-[70vw] max-w-[90rem] bg-white flex justify-start items-center flex-col'>
+                <div className='min-w-[50vw] w-[70vw] max-w-[90rem] bg-white flex justify-start items-center flex-col overflow-x-hidden'>
                     <br />
                     <h1 className='font-black text-3xl mb-5'>Tesla Model Y</h1>
                     <p className='text-center w-3/4'>
@@ -107,21 +123,45 @@ function App(): JSX.Element {
                     </p>
                     <motion.img
                         draggable={false}
-                        className='max-h-[20rem] object-cover mt-10'
+                        className='w-1/2 min-w-[30rem] object-cover mt-10'
                         src={carSource}
                         whileHover={{ scale: 1.2, opacity: .8 }}
                     />
-                    <div className='mt-[3.7vh] bg-gray-200 rounded-full min-w-[40%] w-[15rem] max-w-[20rem] h-20 flex justify-center items-center'>
-                        <div className='flex flex-row justify-between w-[80%]'>
-                            <Circle color='white' setCarSource={() => setCarSource(cars.white)}/>
-                            <Circle color='blue' setCarSource={() => setCarSource(cars.blue)}/>
-                            <Circle color='red' setCarSource={() => setCarSource(cars.red)}/>
-                            <Circle color='gray' setCarSource={() => setCarSource(cars.gray)}/>
-                            <Circle color='black' setCarSource={() => setCarSource(cars.black)}/>
+                    { carSource && <>
+                        <motion.div 
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: .13 }}
+                            className='mt-[3.7vh] mb-10 bg-gray-200 rounded-full min-w-[40%] w-[15rem] max-w-[20rem] h-20 flex justify-center items-center z-10'>
+                            <div className='flex flex-row justify-between w-[80%]'>
+                                <Circle color='white' setCarSource={() => setCarSource(cars.white)}/>
+                                <Circle color='blue' setCarSource={() => setCarSource(cars.blue)}/>
+                                <Circle color='red' setCarSource={() => setCarSource(cars.red)}/>
+                                <Circle color='gray' setCarSource={() => setCarSource(cars.gray)}/>
+                                <Circle color='black' setCarSource={() => setCarSource(cars.black)}/>
+                            </div>
+                        </motion.div>
+                    </> }
+
+                    <p>Válaszd ki a tetszőleges színt!</p>
+
+                    {width > 768 && 
+                        <div className='mt-10 mb-30 w-10 h-20 relative' /* #arrow */>
+                            <motion.div
+                                key={arrowOn.toString()}
+                                initial={{ y: arrowOn ? 0 : 30 }}
+                                animate={{ y: arrowOn ? 30: 0 }}
+                                className='w-10 aspect-square absolute'
+                            >
+                                <div className='absolute w-[5px] h-full bg-black left-1/2 -translate-x-1/2' />
+                                <div className='w-full h-1/4 absolute bottom-0'>
+                                    <div className='w-1/2 h-1 bg-black rotate-[35deg] absolute'></div>
+                                    <div className='w-1/2 h-1 bg-black -rotate-[35deg] absolute left-1/2'></div>
+                                </div>
+                            </motion.div>
                         </div>
-
-                    </div>
-
+                    }
+                    
 
                 </div>
             </div>
