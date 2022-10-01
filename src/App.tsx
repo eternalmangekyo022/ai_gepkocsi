@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useMeasure } from 'react-use';
 import Circle from './components/Circle';
+import { Link } from 'react-router-dom';
 
 function App(): JSX.Element {
     const [drawer, setDrawer] = useState<boolean>(false);
@@ -15,8 +16,8 @@ function App(): JSX.Element {
         window.onresize = () => {
             setWidth(window.innerWidth);
         };
-
-        let interval: NodeJS.Timer;
+        /* eslint-disable-next-line */
+        let interval: any;
         if(width > 768) {
             interval = setInterval(() => setArrowOn(p => !p), 1000);
         }
@@ -82,7 +83,7 @@ function App(): JSX.Element {
                     <motion.div
                         key={drawer.toString() + '2'}
                         className='absolute bg-white w-full h-1 top-[50%]'
-                        initial={{ scale: drawer ? 1 : 0 }}    
+                        initial={{ scale: drawer ? 1 : 0 }}
                         animate={{ scale: drawer ? 0 : 1 }}
                     />
                     <motion.div
@@ -93,33 +94,36 @@ function App(): JSX.Element {
                     />
                 </button>
                 { drawer &&
-                        <ul className='absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2'>
-                            {[
-                                ['Source', 'https://github.com/eternalmangekyo022/ai_gepkocsi', 'https://www.svgrepo.com/show/353044/code.svg'],
-                                ['Check out my GitHub', 'https://github.com/eternalmangekyo022', 'https://www.svgrepo.com/show/349375/github.svg'],
-                                ['About me', './about', 'https://www.svgrepo.com/show/257694/question.svg'],
-                            ].map((i, index) => <>
-                                <motion.li
-                                    className='m-5 flex w-[65vw] h-8 cursor-pointer bg-neutral-500 text-center justify-center items-center rounded-lg hover:bg-neutral-400 transition-colors'
-                                    initial={{ scale: 0, x: -1000 }}
-                                    animate={{ scale: 1, x: 0 }}
-                                    transition={{ delay: .05 + (index / 10) }}
-                                >
-                                    <a target='_blank' href={i[1]} rel="noreferrer" className='w-full'>{i[0]} <img width='20' className='inline ml-1 mb-1' src={i[2]}></img></a>
-                                </motion.li>
-                            </>)}
-                        </ul>
+                            <ul className='absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2'>
+                                {[
+                                    ['Source', 'https://github.com/eternalmangekyo022/ai_gepkocsi', 'https://www.svgrepo.com/show/353044/code.svg'],
+                                    ['Check out my GitHub', 'https://github.com/eternalmangekyo022', 'https://www.svgrepo.com/show/349375/github.svg'],
+                                    ['About me', './about', 'https://www.svgrepo.com/show/257694/question.svg'],
+                                ].map((i: string[], index) => <>
+                                    <motion.li
+                                        className='m-5 flex w-[65vw] h-8 cursor-pointer bg-neutral-500 text-center justify-center items-center rounded-lg hover:bg-neutral-400 transition-colors'
+                                        initial={{ scale: 0, x: -1000 }}
+                                        animate={{ scale: 1, x: 0 }}
+                                        transition={{ delay: .05 + (index / 10) }}
+                                    >
+                                        { index === 3 ? <Link to='/about'>About me<img width='20' className='inline ml-1 mb-1' src={i[2]}></img></Link> :
+                                            <a target='_blank' href={i[1]} rel="noreferrer" className='w-full'>{i[0]} <img width='20' className='inline ml-1 mb-1' src={i[2]}></img></a>
+                                        }
+
+                                    </motion.li>
+                                </>)}
+                            </ul>
                 }
             </motion.header>
             <div className='absolute flex w-full bg-neutral-100 justify-center'
                 style={{ minHeight: window.innerHeight - drawerHeight }}
             >
                 {/* eslint-disable-next-line */}
-                <div className='min-w-[50vw] w-[70vw] max-w-[90rem] bg-white flex justify-start items-center flex-col overflow-x-hidden'>
+                    <div className='min-w-[50vw] w-[70vw] max-w-[90rem] bg-white flex justify-start items-center flex-col overflow-x-hidden'>
                     <br />
                     <h1 className='font-black text-3xl mb-5'>Tesla Model Y</h1>
                     <p className='text-center w-3/4'>
-                        Az általam legkedveltebb, sokak szerint &apos;hamis&apos; biztonságot nyújtó, 2020-as gyártású <span className='font-bold'>Tesla Model Y</span>.
+                            Az általam legkedveltebb, sokak szerint &apos;hamis&apos; biztonságot nyújtó, 2020-as gyártású <span className='font-bold'>Tesla Model Y</span>.
                     </p>
                     <motion.img
                         draggable={false}
@@ -128,7 +132,7 @@ function App(): JSX.Element {
                         whileHover={{ scale: 1.2, opacity: .8 }}
                     />
                     { carSource && <>
-                        <motion.div 
+                        <motion.div
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: .13 }}
@@ -142,29 +146,23 @@ function App(): JSX.Element {
                             </div>
                         </motion.div>
                     </> }
-
                     <p>Válaszd ki a tetszőleges színt!</p>
-
-                    {width > 768 && 
-                        <div className='mt-10 mb-30 w-10 h-20 relative' /* #arrow */>
-                            <motion.div
-                                key={arrowOn.toString()}
-                                initial={{ y: arrowOn ? 0 : 30 }}
-                                animate={{ y: arrowOn ? 30: 0 }}
-                                className='w-10 aspect-square absolute'
-                            >
-                                <div className='absolute w-[5px] h-full bg-black left-1/2 -translate-x-1/2' />
-                                <div className='w-full h-1/4 absolute bottom-0'>
-                                    <div className='w-1/2 h-1 bg-black rotate-[35deg] absolute'></div>
-                                    <div className='w-1/2 h-1 bg-black -rotate-[35deg] absolute left-1/2'></div>
-                                </div>
-                            </motion.div>
-                        </div>
-                    }
-                    
-
+            
                 </div>
             </div>
+            {width > 768 &&
+                            <div className='w-10 h-10 absolute top-[100vh] left-1/2 -translate-x-1/2 -translate-y-full' /* #arrow */>
+                                <motion.div
+                                    key={arrowOn.toString()}
+                                    initial={{ y: arrowOn ? -30 : 0 }}
+                                    animate={{ y: arrowOn ? 0: -30 }}
+                                    className='w-10 aspect-square relative'
+                                >
+                                    <div className='w-1/2 h-1 bg-black rotate-[35deg] absolute left-1'></div>
+                                    <div className='w-1/2 h-1 bg-black -rotate-[35deg] absolute left-[46%]'></div>
+                                </motion.div>
+                            </div>
+            }
 
         </div>
     </>;
