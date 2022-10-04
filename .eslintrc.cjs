@@ -36,6 +36,11 @@ module.exports = {
             'error',
             'always'
         ],
+        'no-trailing-spaces': [
+            'error', {
+                skipBlankLines: true
+            }
+        ],
         '@typescript-eslint/no-unused-vars': 'off'
     }
 };
