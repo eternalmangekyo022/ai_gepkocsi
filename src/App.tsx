@@ -69,7 +69,7 @@ function App(): JSX.Element {
     }, []);
 
     return <>
-        <div className='relative w-screen no-scrollbar'>
+        <div className='relative w-screen'>
             <motion.header
                 ref={drawerRef as React.Ref<HTMLElement>}
                 key={drawer.toString()}
