@@ -148,11 +148,11 @@ function App(): JSX.Element {
             </div>
             {width > 768 &&
                                 <motion.div
-                                    animate={{ y: [height, height - 30, height] }}
+                                    animate={{ y: [height - 30, height, height - 30] }}
                                     onClick={() => {
-                                        scrollTo({ top: window.innerHeight * 2, behavior: 'smooth' });
+                                        scrollTo({ top: height * 2, behavior: 'smooth' });
                                     }}
-                                    transition={{ repeat: Infinity, repeatDelay: .7 }}
+                                    transition={{ repeat: Infinity, repeatDelay: .5 }}
                                     className='absolute aspect-square h-10 left-1/2 -translate-x-1/2 cursor-pointer'
                                 >
                                     <div className='w-1/2 h-1 bg-black rotate-[35deg] absolute left-1 -top-[10px]'></div>
