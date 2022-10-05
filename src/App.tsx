@@ -25,7 +25,7 @@ function App(): JSX.Element {
         const urls = [
             'https://static-assets.tesla.com/configurator/compositor?&options=$MTY13,$PPSW,$WY19B,$INPB0&view=REAR34&model=my&size=1920&bkba_opt=2&crop=0,0,0,0&version=v0119-fec036b0d202209290551',
             'https://static-assets.tesla.com/configurator/compositor?&options=$MTY13,$PPSB,$WY19B,$INPB0&view=REAR34&model=my&size=1920&bkba_opt=2&crop=0,0,0,0&version=v0119-fec036b0d202209290551',
-            'https://static-assets.tesla.com/configurator/compositor?&options=$MTY13,$PPMR,$WY19B,$INPB0&view=REAR34&model=my&size=1920&bkba_opt=2&crop=0,0,0,0&version=v0119-fec036b0d202209290551', 
+            'https://static-assets.tesla.com/configurator/compositor?&options=$MTY13,$PPMR,$WY19B,$INPB0&view=REAR34&model=my&size=1920&bkba_opt=2&crop=0,0,0,0&version=v0119-fec036b0d202209290551',
             'https://static-assets.tesla.com/configurator/compositor?&options=$MTY13,$PMNG,$WY19B,$INPB0&view=REAR34&model=my&size=1920&bkba_opt=2&crop=0,0,0,0&version=v0119-fec036b0d202209290551',
             'https://static-assets.tesla.com/configurator/compositor?&options=$MTY13,$PBSB,$WY19B,$INPB0&view=REAR34&model=my&size=1920&bkba_opt=2&crop=0,0,0,0&version=v0119-fec036b0d202209290551'
         ];
@@ -66,7 +66,7 @@ function App(): JSX.Element {
             <motion.header
                 ref={drawerRef as React.Ref<HTMLElement>}
                 key={drawer.toString()}
-                className='w-full bg-black flex top-0 z-10'
+                className='w-full bg-black flex top-0 z-10 absolute'
                 initial={{ height: drawer ? '4rem' : '15rem', backgroundColor: drawer ? '#000': '#5d5d5a' }}
                 animate={{ height: drawer ? '15rem': '4rem', backgroundColor: drawer ? '#5d5d5a': '#000' }}
             >
@@ -115,7 +115,7 @@ function App(): JSX.Element {
                             </ul>
                 }
             </motion.header>
-            <div className='absolute flex w-full bg-neutral-100 justify-center'
+            <div className='absolute flex w-full bg-neutral-100 justify-center mt-20'
                 style={{ minHeight: window.innerHeight - drawerHeight }}
             >
                 {/* eslint-disable-next-line */}
