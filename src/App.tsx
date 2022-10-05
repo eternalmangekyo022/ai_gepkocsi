@@ -69,7 +69,7 @@ function App(): JSX.Element {
     }, []);
 
     return <>
-        <div className='relative w-screen'>
+        <div className='relative w-screen h-screen bg-neutral-100'>
             <motion.header
                 ref={drawerRef as React.Ref<HTMLElement>}
                 key={drawer.toString()}
@@ -122,7 +122,7 @@ function App(): JSX.Element {
                             </ul>
                 }
             </motion.header>
-            <div className='absolute flex w-full bg-neutral-100 justify-center mt-20'
+            <div className='absolute flex w-full justify-center mt-[3.75rem]'
                 style={{ minHeight: window.innerHeight - drawerHeight }}
             >
                 {/* eslint-disable-next-line */}
@@ -158,7 +158,7 @@ function App(): JSX.Element {
             </div>
             {width > 768 &&
                             <div /* #arrow */
-                                className='w-10 h-10 absolute top-[100vh] left-1/2 -translate-x-1/2 -translate-y-full cursor-pointer pt-[32px]'
+                                className='w-10 h-10 absolute top-[98vh] left-1/2 -translate-x-1/2 -translate-y-full cursor-pointer pt-[32px]'
                                 onClick={() => {
                                     scrollTo({ top: window.innerHeight * 2, behavior: 'smooth' });
                                 }}
