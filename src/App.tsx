@@ -10,24 +10,15 @@ function App(): JSX.Element {
     const [drawerRef, { height: drawerHeight }] = useMeasure();
     const [carSource, setCarSource] = useState<string>();
     const [cars, setCars] = useState<{[key: string]: string}>({white: '', black: '', blue: '', red: '', gray: ''});
-    const [arrowOn, setArrowOn] = useState<boolean>(true);
+
     const [width, setWidth] = useState<number>(window.innerWidth);
-    const interval = useRef<null | NodeJS.Timer>(null);
+    const [height, setHeight] = useState<number>(window.innerHeight);
 
     useEffect(() => {
-        interval.current = setInterval(() => setArrowOn(p => !p), 1000);
-        
-        window.onresize = () => {
+        window.addEventListener('resize', () => {
             setWidth(window.innerWidth);
-            if(window.innerWidth < 768 && interval.current) {
-                clearInterval(interval.current);
-                interval.current = null;
-            }
-            if(window.innerWidth > 768 && !interval.current) {
-                interval.current = setInterval(() => setArrowOn(p => !p), 1000);
-                console.log(interval.current);
-            }
-        };
+            setHeight(window.innerHeight);
+        });
 
         const urls = [
             'https://static-assets.tesla.com/configurator/compositor?&options=$MTY13,$PPSW,$WY19B,$INPB0&view=REAR34&model=my&size=1920&bkba_opt=2&crop=0,0,0,0&version=v0119-fec036b0d202209290551',
@@ -63,7 +54,6 @@ function App(): JSX.Element {
 
 
         return () => {
-            if(interval.current) clearInterval(interval.current);
             window.onresize = null;
         };
     }, []);
@@ -157,22 +147,17 @@ function App(): JSX.Element {
                 </div>
             </div>
             {width > 768 &&
-                            <div /* #arrow */
-                                className='w-10 h-10 absolute top-[98vh] left-1/2 -translate-x-1/2 -translate-y-full cursor-pointer pt-[32px]'
-                                onClick={() => {
-                                    scrollTo({ top: window.innerHeight * 2, behavior: 'smooth' });
-                                }}
-                            >
                                 <motion.div
-                                    key={arrowOn.toString()}
-                                    initial={{ y: arrowOn ? -30 : 0 }}
-                                    animate={{ y: arrowOn ? 0: -30 }}
-                                    className='w-10 aspect-square relative'
+                                    animate={{ y: [height, height - 30, height] }}
+                                    onClick={() => {
+                                        scrollTo({ top: window.innerHeight * 2, behavior: 'smooth' });
+                                    }}
+                                    transition={{ repeat: Infinity, repeatDelay: .7 }}
+                                    className='absolute aspect-square h-10 left-1/2 -translate-x-1/2 cursor-pointer'
                                 >
-                                    <div className='w-1/2 h-1 bg-black rotate-[35deg] absolute left-1'></div>
-                                    <div className='w-1/2 h-1 bg-black -rotate-[35deg] absolute left-[46%]'></div>
+                                    <div className='w-1/2 h-1 bg-black rotate-[35deg] absolute left-1 -top-[10px]'></div>
+                                    <div className='w-1/2 h-1 bg-black -rotate-[35deg] absolute left-[46%] -top-[10px]'></div>
                                 </motion.div>
-                            </div>
             }
 
         </div>
