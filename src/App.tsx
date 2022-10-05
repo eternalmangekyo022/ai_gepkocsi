@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useMeasure } from 'react-use';
 import Circle from './components/Circle';
@@ -11,17 +12,23 @@ function App(): JSX.Element {
     const [cars, setCars] = useState<{[key: string]: string}>({white: '', black: '', blue: '', red: '', gray: ''});
     const [arrowOn, setArrowOn] = useState<boolean>(true);
     const [width, setWidth] = useState<number>(window.innerWidth);
+    const interval = useRef<null | NodeJS.Timer>(null);
 
     useEffect(() => {
+        interval.current = setInterval(() => setArrowOn(p => !p), 1000);
+        
         window.onresize = () => {
             setWidth(window.innerWidth);
+            if(window.innerWidth < 768 && interval.current) {
+                clearInterval(interval.current);
+                interval.current = null;
+            }
+            if(window.innerWidth > 768 && !interval.current) {
+                interval.current = setInterval(() => setArrowOn(p => !p), 1000);
+                console.log(interval.current);
+            }
         };
-        /* eslint-disable-next-line */
-        let interval: any;
-        if(width > 768) {
-            interval = setInterval(() => setArrowOn(p => !p), 1000);
-        }
-        
+
         const urls = [
             'https://static-assets.tesla.com/configurator/compositor?&options=$MTY13,$PPSW,$WY19B,$INPB0&view=REAR34&model=my&size=1920&bkba_opt=2&crop=0,0,0,0&version=v0119-fec036b0d202209290551',
             'https://static-assets.tesla.com/configurator/compositor?&options=$MTY13,$PPSB,$WY19B,$INPB0&view=REAR34&model=my&size=1920&bkba_opt=2&crop=0,0,0,0&version=v0119-fec036b0d202209290551',
@@ -56,7 +63,7 @@ function App(): JSX.Element {
 
 
         return () => {
-            if(interval) clearInterval(interval);
+            if(interval.current) clearInterval(interval.current);
             window.onresize = null;
         };
     }, []);
@@ -147,11 +154,15 @@ function App(): JSX.Element {
                         </motion.div>
                     </> }
                     <p>Válaszd ki a tetszőleges színt!</p>
-            
                 </div>
             </div>
             {width > 768 &&
-                            <div className='w-10 h-10 absolute top-[100vh] left-1/2 -translate-x-1/2 -translate-y-full' /* #arrow */>
+                            <div /* #arrow */
+                                className='w-10 h-10 absolute top-[100vh] left-1/2 -translate-x-1/2 -translate-y-full cursor-pointer pt-[32px]'
+                                onClick={() => {
+                                    scrollTo({ top: window.innerHeight * 2, behavior: 'smooth' });
+                                }}
+                            >
                                 <motion.div
                                     key={arrowOn.toString()}
                                     initial={{ y: arrowOn ? -30 : 0 }}
