@@ -1,19 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { motion } from 'framer-motion';
 import { useMeasure } from 'react-use';
 import Circle from './components/Circle';
 import Links from './components/Links';
 import Header from './components/Header';
+import themeContext from './context/theme';
+/* plz memoize state */
 
-function App(): JSX.Element {
+const App = () => {
     const [drawer, setDrawer] = useState<boolean>(false);
-    const [drawerRef, { height: drawerHeight }] = useMeasure();
     const [carSource, setCarSource] = useState<string>();
-    const [cars, setCars] = useState<{[key: string]: string}>({white: '', black: '', blue: '', red: '', gray: ''});
-
+    const [cars, setCars] = useState<{[key: string]: string}>({ white: '', black: '', blue: '', red: '', gray: '' });
     const [width, setWidth] = useState<number>(window.innerWidth);
     const [height, setHeight] = useState<number>(window.innerHeight);
+    
+    const [drawerRef, { height: drawerHeight }] = useMeasure();
+    const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
     useEffect(() => {
         window.addEventListener('resize', () => {
@@ -60,64 +63,66 @@ function App(): JSX.Element {
     }, []);
 
     return <>
-        <div className='relative w-screen h-screen bg-neutral-100'>
-            <Header
-                drawer={drawer}
-                setDrawer={setDrawer}
-                drawerRef={drawerRef}
-            >
-                { drawer && <Links/> }
-            </Header>
-            <div className='absolute flex w-full justify-center mt-[3.75rem]'
-                style={{ minHeight: window.innerHeight - drawerHeight }}
-            >
-                {/* eslint-disable-next-line */}
+        <themeContext.Provider value={{ theme, setTheme }}>
+            <div className='relative w-screen h-screen bg-neutral-100'>
+                <Header
+                    drawer={drawer}
+                    setDrawer={setDrawer}
+                    drawerRef={drawerRef}
+                >
+                    { drawer && <Links/> }
+                </Header>
+                <div className='absolute flex w-full h-full justify-center mt-[3.75rem]'
+                    style={{ minHeight: window.innerHeight - drawerHeight }}
+                >
+                    {/* eslint-disable-next-line */}
                     <div className='min-w-[50vw] w-[70vw] max-w-[90rem] bg-white flex justify-start items-center flex-col overflow-x-hidden'>
-                    <br />
-                    <h1 className='font-black text-3xl mb-5'>Tesla Model Y</h1>
-                    <p className='text-center w-3/4'>
+                        <br />
+                        <h1 className='font-black text-3xl mb-5'>Tesla Model Y</h1>
+                        <p className='text-center w-3/4'>
                             Az általam legkedveltebb, sokak szerint &apos;hamis&apos; biztonságot nyújtó, 2020-as gyártású <span className='font-bold'>Tesla Model Y</span>.
-                    </p>
-                    <motion.img
-                        draggable={false}
-                        className='w-1/2 min-w-[30rem] object-cover mt-10'
-                        src={carSource}
-                        whileHover={{ scale: 1.2, opacity: .8 }}
-                    />
-                    { carSource && <>
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: .13 }}
-                            className='mt-[3.7vh] mb-10 bg-gray-200 rounded-full min-w-[40%] w-[15rem] max-w-[20rem] h-20 flex justify-center items-center z-10'>
-                            <div className='flex flex-row justify-between w-[80%]'>
-                                <Circle color='white' setCarSource={() => setCarSource(cars.white)}/>
-                                <Circle color='blue' setCarSource={() => setCarSource(cars.blue)}/>
-                                <Circle color='red' setCarSource={() => setCarSource(cars.red)}/>
-                                <Circle color='gray' setCarSource={() => setCarSource(cars.gray)}/>
-                                <Circle color='black' setCarSource={() => setCarSource(cars.black)}/>
-                            </div>
-                        </motion.div>
-                    </> }
-                    <p>Válaszd ki a tetszőleges színt!</p>
+                        </p>
+                        <motion.img
+                            draggable={false}
+                            className='w-1/2 min-w-[30rem] object-cover mt-10'
+                            src={carSource}
+                            whileHover={{ scale: 1.2, opacity: .8 }}
+                        />
+                        { carSource && <>
+                            <motion.div
+                                initial={{ opacity: 0, y: 30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: .13 }}
+                                className='mt-[3.7vh] mb-10 bg-gray-200 rounded-full min-w-[40%] w-[15rem] max-w-[20rem] h-20 flex justify-center items-center z-10'>
+                                <div className='flex flex-row justify-between w-[80%]'>
+                                    <Circle color='white' setCarSource={() => setCarSource(cars.white)}/>
+                                    <Circle color='blue' setCarSource={() => setCarSource(cars.blue)}/>
+                                    <Circle color='red' setCarSource={() => setCarSource(cars.red)}/>
+                                    <Circle color='gray' setCarSource={() => setCarSource(cars.gray)}/>
+                                    <Circle color='black' setCarSource={() => setCarSource(cars.black)}/>
+                                </div>
+                            </motion.div>
+                        </> }
+                        <p>Válaszd ki a tetszőleges színt!</p>
+                    </div>
                 </div>
-            </div>
-            {width > 768 &&
+                {width > 768 && /* arrow */
                                 <motion.div
                                     animate={{ y: [height - 30, height, height - 30] }}
                                     onClick={() => {
                                         scrollTo({ top: height * 2, behavior: 'smooth' });
                                     }}
                                     transition={{ repeat: Infinity, repeatDelay: .5 }}
-                                    className='absolute aspect-square h-10 left-1/2 -translate-x-1/2 cursor-pointer'
+                                    className='absolute aspect-square h-10 left-1/2 -translate-x-1/2 cursor-pointer z-10'
                                 >
                                     <div className='w-1/2 h-1 bg-black rotate-[35deg] absolute left-1 -top-[10px]'></div>
                                     <div className='w-1/2 h-1 bg-black -rotate-[35deg] absolute left-[46%] -top-[10px]'></div>
                                 </motion.div>
-            }
+                }
 
-        </div>
+            </div>
+        </themeContext.Provider>
     </>;
-}
+};
 
 export default App;

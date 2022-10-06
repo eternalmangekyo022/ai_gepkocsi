@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
-import React from 'react';
+import React, { useContext } from 'react';
 import { motion } from 'framer-motion';
+import themeContext from '../context/theme';
 
 type props = {
     children: JSX.Element | false
@@ -11,6 +11,7 @@ type props = {
 }
 
 export default function Header({ children, drawerRef, drawer, setDrawer }: props) {
+    const { theme, setTheme } = useContext(themeContext);
 
     return <>
         <motion.header
