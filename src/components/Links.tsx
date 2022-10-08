@@ -1,8 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Link } from'react-router-dom';
 
 export default function Links() {
+
     return <>
         <ul className='absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2'>
             {[
@@ -16,7 +16,7 @@ export default function Links() {
                     animate={{ scale: 1, x: 0 }}
                     transition={{ delay: .05 + (index / 10) }}
                 >
-                    { index === 3 ? <Link to='/about'>About me<img width='20' className='inline ml-1 mb-1' src={i[2]}></img></Link> :
+                    { index === 3 ? <a>About me<img width='20' className='inline ml-1 mb-1' src={i[2]}></img></a> :
                         <a target='_blank' href={i[1]} rel="noreferrer" className='w-full'>{i[0]} <img width='20' className='inline ml-1 mb-1' src={i[2]}></img></a>
                     }
 
